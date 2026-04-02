@@ -1,205 +1,245 @@
-# Salud Conecta - Documentación del Proyecto
+# Salud Conecta — Documentación de Proyecto
 
-## 1. Descripción General
+## Descripción general
 
-Salud Conecta es un centro de mando adaptativo para la gestión centralizada de historiales clínicos familiares. Permite que un administrador gestione perfiles de salud propios y de su círculo familiar, incluyendo antecedentes médicos, consultas, recetas, estudios clínicos y evolución biométrica.
+Salud Conecta es una aplicación web para gestionar de forma centralizada el historial médico personal y familiar. Permite registrar consultas médicas, exámenes clínicos, recetas e información de medicamentos de cada miembro de la familia desde una sola cuenta.
 
----
-
-## 2. Stack Tecnológico
-
-| Capa | Tecnología | Versión |
-|------|-----------|---------|
-| Backend | .NET (C#) | 9.0 |
-| ORM | Entity Framework Core | 9.0.4 |
-| Base de datos | MariaDB | 10.6+ |
-| Frontend | React + Vite | - |
-| Autenticación | JWT + HttpOnly Cookies | - |
-| Hashing | BCrypt | - |
-| IDE | Visual Studio Code | - |
-| OS de desarrollo | Fedora Linux | - |
-| Control de versiones | Git + GitHub | - |
+El sistema está compuesto por dos repositorios independientes: un backend en .NET con MySQL y un frontend en React con TypeScript.
 
 ---
 
-## 3. Arquitectura
+## Arquitectura general
 
-El proyecto sigue el patrón de Clean Architecture dividido en tres capas dentro de una misma solución .NET:
-
-| Proyecto | Responsabilidad | Depende de |
-|----------|----------------|------------|
-| SaludConecta.Core | Entidades, enums, interfaces, excepciones | Nadie |
-| SaludConecta.Infrastructure | DbContext, Fluent API, repositorios, servicios externos | Core |
-| SaludConecta.API | Controllers, DTOs, servicios de negocio, middlewares | Core + Infrastructure |
-
-La API está organizada por features (módulos funcionales), no por capa técnica. Cada módulo agrupa su controller, DTOs, validadores y servicio en una sola carpeta.
+| Capa | Tecnología | Repositorio |
+|---|---|---|
+| Frontend | React 19 + TypeScript + Vite | SaludConecta-Frontend |
+| Backend | .NET + Clean Architecture | SaludConecta-Backend |
+| Base de datos | MySQL / MariaDB | — |
+| Autenticación | JWT + HttpOnly Cookies | Backend |
 
 ---
 
-## 4. Base de Datos
+## Decisiones técnicas importantes
 
-18 tablas organizadas en módulos:
+### Autenticación
+Se usa el esquema de doble token con HttpOnly Cookies. El access token tiene vida corta y el refresh token se rota en cada uso. JavaScript no puede leer los tokens, lo que elimina el vector de ataque XSS desde localStorage. Si una petición devuelve 401, Axios reintenta automáticamente tras renovar el token sin intervención del usuario.
 
-| Módulo | Tablas | Relación principal |
-|--------|--------|-------------------|
-| Autenticación | Usuarios, ProveedoresAutenticacion, RefreshTokens, CodigosVerificacion | Usuarios → todo |
-| Perfiles | PerfilesPaciente | Usuarios → PerfilesPaciente |
-| Biométricos | RegistrosBiometricos | PerfilesPaciente → registros acumulativos |
-| Antecedentes | CatalogoCondicionesMedicas, AntecedentesPersonales, AntecedentesHeredofamiliares, AntecedentesPsicologicos | PerfilesPaciente → condiciones del catálogo |
-| Estilo de vida | PerfilEstiloVida | PerfilesPaciente → 1:1 |
-| Alergias | Alergias | PerfilesPaciente → múltiples alergias |
-| Eventos quirúrgicos | EventosQuirurgicos | PerfilesPaciente → registros acumulativos |
-| Consultas | Consultas | PerfilesPaciente → historial cronológico |
-| Recetas | Recetas, MedicamentosReceta | Consultas → Recetas → Medicamentos |
-| Estudios clínicos | EstudiosClinicos | Consultas → Estudios |
-| Archivos | ArchivosAdjuntos | Vinculable a recetas, consultas o estudios |
+### Estado global (Frontend)
+Zustand maneja tres stores independientes: `authStore` para el usuario autenticado, `pacienteStore` para el perfil activo en contexto, y `temaStore` para el tema visual. Esta separación evita rerenders innecesarios cuando solo cambia uno de los tres.
+
+### Arquitectura frontend
+Estructura orientada a features — cada módulo funcional tiene sus propios componentes, hooks y páginas. Los elementos reutilizables viven en `shared/`. Los estilos usan CSS Modules para evitar colisiones y mantener el CSS acoplado a su componente.
+
+### Arquitectura backend
+Clean Architecture con separación estricta entre capas: API, Core e Infrastructure. Las dependencias fluyen hacia adentro — los controladores dependen de interfaces, nunca de implementaciones concretas.
 
 ---
 
-## 5. Decisiones de Diseño Tomadas
+## Estado actual del proyecto
 
-| Decisión | Justificación |
-|----------|--------------|
-| Enums almacenados como string en BD | Legibilidad en consultas directas a la BD |
-| Catálogo de condiciones médicas | Alimenta los checkboxes del wizard sin depender de strings sueltos |
-| Antecedentes como registros (no booleans) | Permite agregar condiciones nuevas sin alterar el esquema |
-| PerfilEstiloVida como relación 1:1 | Se actualiza en lugar de acumularse, a diferencia de los biométricos |
-| RegistrosBiometricos como log temporal | Peso y talla cambian, se necesita el historial para graficar tendencias |
-| EventosQuirurgicos como log temporal | Cirugías, hospitalizaciones e inmunizaciones se acumulan con el tiempo |
-| Recetas con ConsultaId nullable | Una receta puede existir sin una consulta registrada en el sistema |
-| ArchivosAdjuntos genérica | Una sola tabla vinculable a recetas, consultas o estudios, evita crear tabla por entidad |
-| Archivos en carpeta local (uploads/) | Despliegue en servidor local, sin dependencia de servicios cloud |
-| JWT en HttpOnly Cookies | Previene robo de tokens por XSS, invisible para JavaScript |
-| Rotación de refresh tokens | Al refrescar, se revoca el actual y se genera uno nuevo |
-| CORS con AllowCredentials | Necesario para que el navegador envíe las cookies al backend |
-| Refresh token cookie con Path /api/auth | Solo se envía a endpoints de autenticación, no a toda la API |
-| Background service para limpiar códigos de verificación | Limpia periódicamente los códigos expirados de la BD sin depender de Redis |
-| Vistas SQL eliminadas del esquema | Se manejan con proyecciones LINQ en el código para mejor integración con EF |
-| Sin Redis por ahora | Decisión de alcance, se integrará en una versión futura |
+### Backend
 
----
+| Módulo | Estado | Notas |
+|---|---|---|
+| Configuración base del proyecto | Completo | Clean Architecture, capas definidas |
+| Entidades del dominio | Completo | Usuario, Paciente, Consulta, Receta, etc. |
+| Configuración de base de datos | Completo | Entity Framework + MariaDB |
+| Repositorios base | Completo | Patrón genérico + repositorios específicos |
+| Manejo de excepciones | Completo | Middleware global + excepciones de negocio |
+| Autenticación local (registro / login) | Completo | BCrypt + JWT + refresh token con rotación |
+| HttpOnly Cookies | Completo | Access token + refresh token en cookies seguras |
+| Google OAuth | Pendiente | — |
+| Módulo de perfiles / pacientes | Pendiente | — |
+| Módulo de consultas | Pendiente | — |
+| Módulo de exámenes clínicos | Pendiente | — |
+| Módulo de recetas | Pendiente | — |
+| Módulo de medicamentos | Pendiente | — |
 
-## 6. Estado Actual - Trabajo Completado
+### Frontend
 
-| Componente | Estado | Detalle |
-|-----------|--------|---------|
-| Base de datos (MariaDB) | ✅ Completo | 18 tablas creadas, datos semilla del catálogo de condiciones médicas insertados |
-| Estructura del proyecto | ✅ Completo | Clean Architecture con tres proyectos, organización por features |
-| Entidades (Core) | ✅ Completo | 18 entidades mapeando las 18 tablas |
-| Enums (Core) | ✅ Completo | 16 enums cubriendo todos los tipos del dominio |
-| Excepciones (Core) | ✅ Completo | NotFoundException, ConflictException, UnauthorizedException, BadRequestException |
-| Interfaces de repositorios (Core) | ✅ Parcial | IRepositorioBase, IUsuarioRepository, IProveedorAutenticacionRepository, IRefreshTokenRepository |
-| Interfaces de servicios (Core) | ✅ Parcial | IAuthService |
-| DbContext (Infrastructure) | ✅ Completo | 18 DbSets configurados con ApplyConfigurationsFromAssembly |
-| Fluent API (Infrastructure) | ✅ Completo | 18 archivos de configuración con todas las relaciones, índices y constraints |
-| Repositorios (Infrastructure) | ✅ Parcial | RepositorioBase, UsuarioRepository, ProveedorAutenticacionRepository, RefreshTokenRepository |
-| Paquetes NuGet | ✅ Completo | EF Core 9.0.4, Pomelo MySQL 9.0.0, EF Design 9.0.4, JWT Bearer 9.0.4, BCrypt |
-| Auth - Registro local | ✅ Completo | Endpoint, servicio, hashing con BCrypt, tokens en HttpOnly cookies |
-| Auth - Login local | ✅ Completo | Validación de credenciales, generación de tokens |
-| Auth - Refresh token | ✅ Completo | Rotación de tokens, lectura desde cookie |
-| Auth - Logout | ✅ Completo | Revocación de token y limpieza de cookies |
-| Middleware de excepciones | ✅ Completo | Manejo global con mapeo a HTTP status codes |
-| Configuración JWT | ✅ Completo | Lectura de token desde cookie, validación completa |
-| CORS | ✅ Completo | Configurado para frontend local con credentials |
-| Swagger | ✅ Completo | Documentación automática de endpoints |
-| Frontend - Auth local | ✅ Completo | Registro y login conectados al backend |
-
----
-
-## 7. Sprints de Trabajo Pendiente
-
-### Sprint 1 — Funcionalidad Core
-
-| Tarea | Prioridad | Módulo | Detalle |
-|-------|-----------|--------|---------|
-| CRUD de perfiles de paciente | Crítica | Perfiles | Crear, listar, editar, desactivar perfiles. Selector de perfil activo en modo familiar |
-| Endpoint para cambiar modo Personal/Familiar | Crítica | Perfiles | Actualizar el modo del usuario y habilitar el selector de perfiles |
-| CRUD de consultas | Crítica | Consultas | Crear, listar (timeline), editar, eliminar consultas médicas |
-| CRUD de recetas | Crítica | Recetas | Crear recetas vinculadas o no a consultas, con medicamentos |
-| CRUD de medicamentos de receta | Crítica | Recetas | Agregar, editar, desactivar medicamentos dentro de una receta |
-| CRUD de estudios clínicos | Alta | Estudios | Crear, listar, editar estudios. Vinculable a consultas |
-| Subida de archivos adjuntos | Alta | Archivos | Upload de imágenes/PDFs vinculados a recetas, consultas o estudios |
-| Servir archivos con autorización | Alta | Archivos | Endpoint protegido que solo devuelve archivos del usuario autenticado |
-
-### Sprint 2 — Historial Médico
-
-| Tarea | Prioridad | Módulo | Detalle |
-|-------|-----------|--------|---------|
-| Wizard de antecedentes personales | Alta | Antecedentes | Flujo paso a paso con checkboxes del catálogo por categoría |
-| Wizard de antecedentes heredofamiliares | Alta | Antecedentes | Mismo flujo, separado por parentesco (Padre, Madre, etc.) |
-| CRUD de antecedentes psicológicos | Alta | Antecedentes | Agregar, editar, marcar activo/inactivo |
-| CRUD de estilo de vida | Alta | Estilo de vida | Crear o actualizar el perfil de estilo de vida (relación 1:1) |
-| CRUD de alergias | Alta | Alergias | Agregar, editar, desactivar alergias por tipo y severidad |
-| CRUD de eventos quirúrgicos | Alta | Eventos | Registrar cirugías, traumatismos, hospitalizaciones, etc. |
-| Indicador de completitud del perfil | Media | Perfiles | Porcentaje de perfil completado con accesos directos a secciones faltantes |
-
-### Sprint 3 — Visualización y Monitoreo
-
-| Tarea | Prioridad | Módulo | Detalle |
-|-------|-----------|--------|---------|
-| Registro de datos biométricos | Alta | Biométricos | Endpoint para registrar peso y estatura con fecha |
-| Gráficas de evolución biométrica | Alta | Biométricos | Tendencias de peso y talla con Recharts en el frontend |
-| Dashboard del paciente | Alta | Dashboard | Panel Bento Grid con resumen de línea de vida, medicamentos activos y biométricos |
-| Línea de vida (timeline) | Alta | Consultas | Vista cronológica de consultas, diagnósticos y especialistas |
-| Listado de medicamentos activos | Alta | Recetas | Vista de medicamentos vigentes con próxima toma calculada por FrecuenciaHoras |
-| Recordatorio de actualización de datos | Media | Perfiles | Aviso cuando han pasado X días sin actualizar peso u otros datos variables |
-
-### Sprint 4 — Autenticación Avanzada
-
-| Tarea | Prioridad | Módulo | Detalle |
-|-------|-----------|--------|---------|
-| Login con Google OAuth | Alta | Auth | Flujo completo: botón en frontend → token de Google → validación en API → creación o vinculación de cuenta |
-| Vincular cuenta Google a cuenta existente | Media | Auth | Un usuario local puede agregar Google como segundo método de login |
-| Verificación de teléfono por SMS | Media | Auth | Envío de código por SMS (Twilio u otro), validación en API |
-| Recuperación de contraseña por correo | Media | Auth | Envío de código al correo, validación y cambio de contraseña |
-| Recuperación de contraseña por SMS | Media | Auth | Mismo flujo pero con el teléfono verificado |
-| Cambio de contraseña desde la app | Media | Auth | Endpoint protegido para cambiar contraseña conociendo la actual |
-| BackgroundService de limpieza de códigos | Baja | Auth | Job periódico que elimina códigos de verificación expirados |
-
-### Sprint 5 — Notificaciones y Tiempo Real
-
-| Tarea | Prioridad | Módulo | Detalle |
-|-------|-----------|--------|---------|
-| Tabla de notificaciones | Media | Notificaciones | Almacenar notificaciones pendientes y leídas |
-| BackgroundService de generación de notificaciones | Media | Notificaciones | Revisa medicamentos próximos a tomar y citas próximas |
-| Integración de SignalR (WebSocket) | Media | Notificaciones | Envío de notificaciones en tiempo real al usuario conectado |
-| Notificación de cita un día antes | Media | Notificaciones | Detectar citas del día siguiente y notificar |
-| Notificación de cita el mismo día | Media | Notificaciones | Recordatorio el mero día de la cita |
-| Notificación de medicamento próximo | Media | Notificaciones | Aviso basado en FrecuenciaHoras del medicamento activo |
-| Bandeja de notificaciones en frontend | Media | Notificaciones | Campanita con contador de no leídas, listado desplegable |
-
-### Sprint 6 — Pulido y Extras
-
-| Tarea | Prioridad | Módulo | Detalle |
-|-------|-----------|--------|---------|
-| Generación de historia clínica PDF | Baja | Reportes | Generar un documento PDF con toda la información del paciente |
-| Extracción de texto de imágenes con IA | Baja | Estudios | OCR inteligente para extraer valores de resultados de laboratorio |
-| Integración de Redis | Baja | Infraestructura | Caché del perfil activo, rate limiting, gestión de tomas precalculada |
-| Onboarding progresivo | Baja | UX | Flujo de registro mínimo + indicador de progreso del perfil |
-| Manejo de múltiples sesiones | Baja | Auth | Ver sesiones activas y cerrar sesiones remotas |
-| Auditoría de accesos | Baja | Seguridad | Log de quién accedió a qué perfil y cuándo |
+| Módulo | Estado | Notas |
+|---|---|---|
+| Configuración base del proyecto | Completo | Vite + React + TypeScript |
+| Estructura de carpetas | Completo | Orientada a features |
+| Design system (variables CSS) | Completo | Colores, tipografía, espaciado, sombras |
+| Modo claro / oscuro | Completo | CSS variables + Zustand + persistencia en localStorage |
+| Tipografía | Completo | DM Sans + DM Serif Display |
+| Componente Input | Completo | Icono, toggle contraseña, manejo de errores |
+| Componente Boton | Completo | Variantes primario, secundario, fantasma |
+| Componente BotonTema | Completo | Toggle de tema reutilizable |
+| Configuración de Axios | Completo | withCredentials + refresh automático ante 401 |
+| authApi | Completo | login, registro, verificarSesion, logout |
+| authStore | Completo | Usuario, estado de carga, inicialización |
+| temaStore | Completo | Toggle, inicialización, persistencia |
+| pacienteStore | Completo | Estructura lista, pendiente de conectar |
+| AppRouter | Completo | Rutas públicas y protegidas |
+| Landing page | Completo | 5 secciones + animaciones de scroll |
+| Login page | Completo | Formulario + Google OAuth ready + animaciones |
+| Registro page | Completo | Formulario + validación frontend + animaciones |
+| Google OAuth (frontend) | Pendiente | Requiere endpoint en backend |
+| Selector de perfiles | Pendiente | Requiere módulo de perfiles en backend |
+| Dashboard | Pendiente | — |
+| Línea de vida | Pendiente | — |
+| Medicamentos | Pendiente | — |
+| Biometría | Pendiente | — |
 
 ---
 
-## 8. Repositorios
+## Sprints pendientes
 
-| Repositorio | Contenido |
-|------------|-----------|
-| SaludConecta-Backend | API .NET 9.0 con Clean Architecture |
-| SaludConecta-Frontend | Aplicación React + Vite |
+### Sprint 1 — Módulo de perfiles (Backend)
+
+| Tarea | Prioridad |
+|---|---|
+| Endpoint GET /pacientes — listar perfiles del usuario | Crítico |
+| Endpoint POST /pacientes — crear perfil (primer paciente en onboarding) | Crítico |
+| Endpoint POST /pacientes — agregar familiar | Crítico |
+| Endpoint PUT /pacientes/:id — editar perfil | Alta |
+| Endpoint DELETE /pacientes/:id — eliminar perfil | Media |
+| Definir lógica de Modo Personal vs Modo Familiar | Crítico |
+| Validar que el primer perfil siempre sea el del usuario administrador | Alta |
+
+### Sprint 2 — Onboarding y selector de perfiles (Frontend)
+
+| Tarea | Prioridad |
+|---|---|
+| Flujo de onboarding tras el primer registro (crear perfil propio) | Crítico |
+| Selector de perfiles — cuadrícula de avatares | Crítico |
+| Lógica de cambio de contexto de paciente en pacienteStore | Crítico |
+| Formulario para agregar familiar | Alta |
+| Formulario para editar perfil | Alta |
+| Lógica de Modo Personal (sin selector, entra directo al dashboard) | Alta |
+| Lógica de Modo Familiar (muestra el selector de perfiles) | Alta |
+
+### Sprint 3 — Google OAuth
+
+| Tarea | Prioridad |
+|---|---|
+| Configurar proveedor Google en backend (.NET) | Crítico |
+| Endpoint de callback OAuth | Crítico |
+| Manejar caso: correo ya registrado con cuenta local | Alta |
+| Conectar botón "Continuar con Google" en Login y Registro | Alta |
+| Manejar redirección post-login desde OAuth | Alta |
+
+### Sprint 4 — Dashboard y navegación
+
+| Tarea | Prioridad |
+|---|---|
+| Layout principal — sidebar + navbar autenticada | Crítico |
+| Dashboard con resumen del paciente activo | Crítico |
+| Navegación entre secciones (Línea de vida, Medicamentos, Biometría) | Crítico |
+| Componente de cambio de paciente activo desde el layout | Alta |
+| Botón de cerrar sesión en el layout | Alta |
+| Modo responsivo del layout | Media |
+
+### Sprint 5 — Línea de vida (Consultas)
+
+| Tarea | Prioridad |
+|---|---|
+| Endpoint POST /consultas — registrar cita | Crítico |
+| Endpoint GET /consultas/:pacienteId — historial cronológico | Crítico |
+| Endpoint PUT /consultas/:id — editar cita | Alta |
+| Endpoint DELETE /consultas/:id | Media |
+| Vista de historial cronológico en frontend | Crítico |
+| Formulario de nueva consulta (doctor, especialidad, fecha, diagnóstico) | Crítico |
+| Detalle de consulta expandible | Alta |
+
+### Sprint 6 — Exámenes clínicos
+
+| Tarea | Prioridad |
+|---|---|
+| Endpoint POST /examenes — registrar examen | Crítico |
+| Endpoint GET /examenes/:pacienteId — listar por paciente | Crítico |
+| Soporte para múltiples tipos (sangre, orina, etc.) | Alta |
+| Vista de exámenes en frontend | Crítico |
+| Formulario de nuevo examen | Crítico |
+| Detalle del examen con resultados | Alta |
+
+### Sprint 7 — Recetas
+
+| Tarea | Prioridad |
+|---|---|
+| Endpoint POST /recetas — registrar receta con imagen | Crítico |
+| Almacenamiento de imágenes (definir estrategia: local, S3, Cloudinary) | Crítico |
+| Endpoint GET /recetas/:pacienteId | Crítico |
+| Guardar nombre del doctor, especialidad y consultorio | Alta |
+| Vista de recetas en frontend | Crítico |
+| Subida y previsualización de imagen de receta | Alta |
+| Endpoint DELETE /recetas/:id | Media |
+
+### Sprint 8 — Medicamentos
+
+| Tarea | Prioridad |
+|---|---|
+| Endpoint POST /medicamentos — registrar medicamento | Crítico |
+| Endpoint GET /medicamentos/:pacienteId — listar activos e histórico | Crítico |
+| Endpoint PUT /medicamentos/:id — marcar como finalizado | Alta |
+| Vista de medicamentos en frontend | Crítico |
+| Formulario de nuevo medicamento (nombre, dosis, frecuencia, motivo) | Crítico |
+| Diferenciación visual entre medicamentos activos e histórico | Media |
+
+### Sprint 9 — Biometría
+
+| Tarea | Prioridad |
+|---|---|
+| Endpoint POST /biometria — registrar peso y talla | Crítico |
+| Endpoint GET /biometria/:pacienteId — historial de registros | Crítico |
+| Gráfica de evolución de peso con Recharts | Alta |
+| Gráfica de evolución de talla | Alta |
+| Cálculo automático de IMC | Media |
+| Indicador visual de tendencia (sube, baja, estable) | Baja |
+
+### Sprint 10 — Calidad y cierre
+
+| Tarea | Prioridad |
+|---|---|
+| Manejo de errores global en frontend (toasts / notificaciones) | Alta |
+| Estados de carga y skeletons en listas | Alta |
+| Estados vacíos cuando no hay datos registrados | Alta |
+| Validaciones de formulario consistentes en todo el frontend | Alta |
+| Pruebas de flujo completo (registro → onboarding → dashboard) | Alta |
+| Optimización de imágenes y performance | Media |
+| Revisar accesibilidad básica (aria-labels, contraste) | Media |
+| Variables de entorno para producción | Alta |
+| Documentación de endpoints (Swagger) | Media |
 
 ---
 
-## 9. Configuración de Desarrollo
+## Flujo principal de la aplicación
 
-### Requisitos
-- .NET 9.0 SDK
-- MariaDB 10.6+
-- Node.js (para el frontend)
-- Visual Studio Code con extensión C#
+```
+Landing (/)
+  └── Registro (/registro)
+        └── Onboarding (crear perfil propio)
+              ├── Modo Personal → Dashboard directo
+              └── Modo Familiar → Agregar familiares → Selector de perfiles
+                                                              └── Dashboard
 
-### Usuario de base de datos
-Se utiliza un usuario dedicado con permisos exclusivamente sobre la base de datos salud_conecta, no se usa root.
+Landing (/)
+  └── Login (/login)
+        ├── Modo Personal → Dashboard directo
+        └── Modo Familiar → Selector de perfiles → Dashboard
+```
 
-### Variables sensibles
-Los datos sensibles (connection strings, JWT secret, credenciales de Google OAuth) se almacenan en appsettings.Development.json, el cual está excluido del repositorio por .gitignore.
+---
+
+## Variables de entorno
+
+### Frontend (.env)
+
+| Variable | Descripción | Ejemplo |
+|---|---|---|
+| VITE_API_URL | URL base del backend | http://localhost:5000/api |
+
+### Backend (appsettings.json)
+
+| Variable | Descripción |
+|---|---|
+| JwtSettings:SecretKey | Clave secreta para firmar JWT |
+| JwtSettings:Issuer | Emisor del token |
+| JwtSettings:Audience | Audiencia del token |
+| JwtSettings:AccessTokenExpirationMinutes | Vida del access token |
+| JwtSettings:RefreshTokenExpirationDays | Vida del refresh token |
+| ConnectionStrings:DefaultConnection | Cadena de conexión a MariaDB |
+| GoogleOAuth:ClientId | ID de cliente de Google |
+| GoogleOAuth:ClientSecret | Secreto de cliente de Google |
