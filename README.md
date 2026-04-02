@@ -7,7 +7,7 @@
 
 Interfaz de usuario de Salud Conecta, una aplicación web para gestionar de forma centralizada el historial médico personal y familiar.
 
-> Repositorio del backend: [SaludConecta-Backend](https://github.com/tu-usuario/SaludConecta-Backend)
+> Repositorio del backend: [SaludConecta-Backend](https://github.com/Dany1912-dev/SaludConecta-Backend)
 
 ---
 
@@ -153,4 +153,4 @@ La aplicación soporta modo claro y modo oscuro. La preferencia se guarda en `lo
 
 ## Relacionado
 
-- [SaludConecta-Backend](https://github.com/tu-usuario/SaludConecta-Backend) — API REST construida con .NET y MySQL
+- [SaludConecta-Backend](https://github.com/Dany1912-dev/SaludConecta-Backend) — API REST construida con .NET y MySQL
