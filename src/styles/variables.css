@@ -1,0 +1,122 @@
+/* ============================================
+   SALUD CONECTA — Design Tokens
+   ============================================ */
+
+/* ---------- MODO CLARO (por defecto) ---------- */
+:root {
+  /* Primarios */
+  --color-primario:        #4569AD;
+  --color-primario-oscuro: #1F3F74;
+  --color-primario-claro:  #B7C3E8;
+  --color-primario-hover:  #3A5A99;
+
+  /* Fondos */
+  --color-fondo:            #F8FAFF;
+  --color-fondo-secundario: #EEF2FF;
+  --color-tarjeta:          #FFFFFF;
+  --color-tarjeta-hover:    #F0F4FF;
+
+  /* Bordes */
+  --color-borde:        #DDE3F0;
+  --color-borde-fuerte: #B7C3E8;
+
+  /* Texto */
+  --color-texto-principal:  #1A1A2E;
+  --color-texto-secundario: #6B7280;
+  --color-texto-suave:      #9CA3AF;
+  --color-texto-inverso:    #FFFFFF;
+
+  /* Semánticos */
+  --color-exito:        #22C55E;
+  --color-exito-fondo:  #F0FDF4;
+  --color-alerta:       #F59E0B;
+  --color-alerta-fondo: #FFFBEB;
+  --color-error:        #EF4444;
+  --color-error-fondo:  #FEF2F2;
+  --color-info:         #3B82F6;
+  --color-info-fondo:   #EFF6FF;
+
+  /* Sombras */
+  --sombra-sm: 0 1px 3px rgba(30, 58, 138, 0.08);
+  --sombra-md: 0 4px 12px rgba(30, 58, 138, 0.12);
+  --sombra-lg: 0 8px 24px rgba(30, 58, 138, 0.16);
+
+  /* Tipografía */
+  --fuente-base:  'Inter', sans-serif;
+  --fuente-titulo: 'Inter', sans-serif;
+
+  --texto-xs:  0.75rem;   /* 12px */
+  --texto-sm:  0.875rem;  /* 14px */
+  --texto-md:  1rem;      /* 16px */
+  --texto-lg:  1.125rem;  /* 18px */
+  --texto-xl:  1.25rem;   /* 20px */
+  --texto-2xl: 1.5rem;    /* 24px */
+  --texto-3xl: 1.875rem;  /* 30px */
+
+  /* Espaciado */
+  --espacio-1: 0.25rem;
+  --espacio-2: 0.5rem;
+  --espacio-3: 0.75rem;
+  --espacio-4: 1rem;
+  --espacio-5: 1.25rem;
+  --espacio-6: 1.5rem;
+  --espacio-8: 2rem;
+  --espacio-10: 2.5rem;
+  --espacio-12: 3rem;
+
+  /* Bordes redondeados */
+  --radio-sm: 6px;
+  --radio-md: 10px;
+  --radio-lg: 16px;
+  --radio-xl: 24px;
+  --radio-full: 9999px;
+
+  /* Transiciones */
+  --transicion-rapida:  150ms ease;
+  --transicion-normal:  250ms ease;
+  --transicion-lenta:   400ms ease;
+
+  /* Sidebar / Layout */
+  --ancho-sidebar: 260px;
+  --alto-navbar:   64px;
+}
+
+/* ---------- MODO OSCURO ---------- */
+[data-theme="dark"] {
+  /* Primarios */
+  --color-primario:        #6B8CC7;
+  --color-primario-oscuro: #4569AD;
+  --color-primario-claro:  #1F3F74;
+  --color-primario-hover:  #7A9AD4;
+
+  /* Fondos */
+  --color-fondo:            #0F1624;
+  --color-fondo-secundario: #162033;
+  --color-tarjeta:          #1A2640;
+  --color-tarjeta-hover:    #1F2E4D;
+
+  /* Bordes */
+  --color-borde:        #2A3A5C;
+  --color-borde-fuerte: #3A4F7A;
+
+  /* Texto */
+  --color-texto-principal:  #E8EEF8;
+  --color-texto-secundario: #94A3B8;
+  --color-texto-suave:      #64748B;
+  --color-texto-inverso:    #0F1624;
+
+  /* Semánticos */
+  --color-exito:        #4ADE80;
+  --color-exito-fondo:  #052E16;
+  --color-alerta:       #FBB040;
+  --color-alerta-fondo: #1C1200;
+  --color-error:        #F87171;
+  --color-error-fondo:  #2D0A0A;
+  --color-info:         #60A5FA;
+  --color-info-fondo:   #0C1A3A;
+
+  /* Sombras */
+  --sombra-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --sombra-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --sombra-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+}

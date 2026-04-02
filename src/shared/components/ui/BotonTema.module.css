@@ -1,0 +1,28 @@
+.boton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radio-md);
+  border: 1.5px solid var(--color-borde);
+  background-color: var(--color-tarjeta);
+  color: var(--color-texto-secundario);
+  cursor: pointer;
+  transition: background-color var(--transicion-rapida),
+              border-color var(--transicion-rapida),
+              color var(--transicion-rapida),
+              transform var(--transicion-rapida);
+  flex-shrink: 0;
+}
+
+.boton:hover {
+  background-color: var(--color-fondo-secundario);
+  border-color: var(--color-borde-fuerte);
+  color: var(--color-primario);
+  transform: rotate(12deg);
+}
+
+.boton:active {
+  transform: rotate(12deg) scale(0.92);
+}
