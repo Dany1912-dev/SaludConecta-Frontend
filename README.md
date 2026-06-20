@@ -1,38 +1,40 @@
-# Salud Conecta — Frontend
+# SaludConecta — Frontend
 
-![React](https://img.shields.io/badge/React-19-61DAFB?style=flat&logo=react&logoColor=white&labelColor=20232A)
-![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=flat&logo=typescript&logoColor=white&labelColor=1a1a2e)
-![Vite](https://img.shields.io/badge/Vite-6-646CFF?style=flat&logo=vite&logoColor=white&labelColor=1a1a2e)
-![License](https://img.shields.io/badge/license-MIT-4569AD?style=flat)
-
-Interfaz de usuario de Salud Conecta, una aplicación web para gestionar de forma centralizada el historial médico personal y familiar.
+[![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white&labelColor=20232A)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
+[![Estado](https://img.shields.io/badge/estado-en_desarrollo-yellow)]()
 
 > Repositorio del backend: [SaludConecta-Backend](https://github.com/Dany1912-dev/SaludConecta-Backend)
 
 ---
 
-## Sobre el proyecto
+## La idea
 
-La información médica vive fragmentada — recetas en cajones, resultados de laboratorio en fotos del celular, nombres de médicos en notas perdidas. En una emergencia, nadie recuerda qué medicamentos toma ni con qué especialista fue la última vez.
+La información médica personal vive fragmentada: recetas en cajones, resultados de laboratorio en fotos del celular, el nombre del especialista anotado en alguna hoja perdida. En una emergencia, nadie recuerda qué medicamentos toma, qué alergias tiene ni cuándo fue la última consulta.
 
-Salud Conecta resuelve eso. Permite registrar consultas, exámenes clínicos, recetas y medicamentos de cada miembro de la familia en un solo lugar, accesible en cualquier momento.
+**SaludConecta** es una cartilla médica digital personal. Permite registrar y centralizar todo el historial clínico propio y el de la familia en un solo lugar. En caso de urgencia, se puede generar un resumen o descarga del historial completo en segundos.
 
 ---
 
-## Tech stack
+## Estado actual
 
-| Capa | Tecnología |
-|---|---|
-| Framework | React 19 + TypeScript |
-| Build tool | Vite 6 |
-| Routing | React Router v7 |
-| Estado global | Zustand |
-| Data fetching | TanStack Query (React Query) |
-| HTTP client | Axios |
-| Estilos | CSS Modules |
-| Iconos | Lucide React |
-| Gráficas | Recharts |
-| Tipografía | DM Sans + DM Serif Display |
+El proyecto está iniciado. La landing, el login y el registro funcionan y se conectan al backend. El resto de los módulos están estructurados pero pendientes de implementar.
+
+| Módulo | Estado |
+|--------|--------|
+| Landing page | ✅ Completo |
+| Login y registro | ✅ Completo |
+| Modo claro / oscuro | ✅ Completo |
+| Google OAuth | ⏳ Pendiente de backend |
+| Selector de perfiles familiares | ⏳ Pendiente |
+| Dashboard principal | ⏳ Pendiente |
+| Línea de vida (historial cronológico) | ⏳ Pendiente |
+| Medicamentos y recetas | ⏳ Pendiente |
+| Biometría (peso, estatura) | ⏳ Pendiente |
+| Estudios clínicos | ⏳ Pendiente |
+| Calendario y recordatorios | ⏳ Pendiente |
+| Exportar historial clínico | ⏳ Pendiente |
 
 ---
 
@@ -40,22 +42,20 @@ Salud Conecta resuelve eso. Permite registrar consultas, exámenes clínicos, re
 
 ```
 src/
-├── api/                        # Configuración de Axios y llamadas al backend
-│   ├── axiosConfig.ts          # Instancia base con refresh automático de tokens
-│   ├── authApi.ts
-│   └── pacientesApi.ts
+├── api/
+│   ├── axiosConfig.ts          # Instancia Axios: cookies, refresh automático en 401
+│   └── authApi.ts              # Llamadas al módulo de autenticación
 │
-├── features/                   # Módulos por funcionalidad
+├── features/                   # Un directorio por módulo funcional
 │   ├── auth/
-│   │   ├── components/
 │   │   ├── hooks/              # useLogin, useRegistro
 │   │   └── pages/              # LoginPage, RegistroPage
 │   ├── landing/                # Página principal pública
-│   ├── perfiles/               # Selector de paciente activo
-│   ├── dashboard/
-│   ├── lineaDeVida/
-│   ├── medicamentos/
-│   └── biometria/
+│   ├── perfiles/               # Selector de paciente activo (pendiente)
+│   ├── dashboard/              # (pendiente)
+│   ├── lineaDeVida/            # Historial cronológico (pendiente)
+│   ├── medicamentos/           # (pendiente)
+│   └── biometria/              # (pendiente)
 │
 ├── store/                      # Estado global con Zustand
 │   ├── authStore.ts            # Usuario autenticado
@@ -64,93 +64,72 @@ src/
 │
 ├── router/
 │   ├── AppRouter.tsx
-│   └── PrivateRoute.tsx
+│   └── PrivateRoute.tsx        # Protección de rutas autenticadas
 │
-├── shared/                     # Componentes y utilidades reutilizables
-│   ├── components/
-│   │   ├── ui/                 # Input, Boton, BotonTema
-│   │   └── layout/
-│   ├── hooks/
-│   └── utils/
+├── shared/
+│   ├── components/ui/          # Input, Boton, BotonTema — componentes reutilizables
+│   └── hooks/
 │
 └── styles/
-    └── variables.css           # Design tokens — colores, tipografía, espaciado
-```
-
----
-
-## Primeros pasos
-
-### Requisitos
-
-- Node.js 18 o superior
-- El backend de Salud Conecta corriendo localmente
-
-### Instalación
-
-```bash
-# Clonar el repositorio
-git clone https://github.com/tu-usuario/SaludConecta-Frontend.git
-cd SaludConecta-Frontend
-
-# Instalar dependencias
-npm install
-
-# Configurar variables de entorno
-cp .env.example .env
-```
-
-Edita el archivo `.env` con la URL de tu backend:
-
-```env
-VITE_API_URL=http://localhost:5000/api
-```
-
-### Desarrollo
-
-```bash
-npm run dev
-```
-
-La app estará disponible en `http://localhost:5173`.
-
-### Build
-
-```bash
-npm run build
+    └── variables.css           # Design tokens: colores, tipografía, espaciado
 ```
 
 ---
 
 ## Autenticación
 
-La autenticación usa **HttpOnly Cookies** para almacenar el access token y el refresh token. JavaScript no puede leer estos tokens directamente — el navegador los envía automáticamente en cada petición. Esto elimina el riesgo de ataques XSS que roben credenciales desde `localStorage`.
+Las cookies **HttpOnly** almacenan el access token y el refresh token — JavaScript nunca los toca directamente. El navegador los adjunta automáticamente en cada petición al backend.
 
-El flujo de refresh es transparente: si una petición devuelve `401`, Axios reintenta automáticamente después de renovar el token, sin que el usuario lo note.
+Cuando llega un `401`, el interceptor de Axios intenta renovar el token llamando a `/api/auth/refresh` antes de reintentar la solicitud original. Si hay múltiples peticiones simultáneas que fallan con 401, solo una lanza el refresh; las demás se encolan y se resuelven cuando el refresh termina. Si el refresh también falla, se despacha el evento `sc:sesion-expirada` para limpiar la sesión y redirigir al login.
 
 ---
 
 ## Temas
 
-La aplicación soporta modo claro y modo oscuro. La preferencia se guarda en `localStorage` y al iniciar respeta la configuración del sistema operativo del usuario. Todos los colores están definidos como variables CSS bajo `:root` y `[data-theme="dark"]`, por lo que cualquier componente nuevo hereda el tema automáticamente.
+La app soporta modo claro y oscuro. Al iniciar respeta la preferencia del sistema operativo; después la preferencia manual se guarda en `localStorage`. Todos los colores son variables CSS definidas en `styles/variables.css` bajo `:root` y `[data-theme="dark"]`, por lo que cualquier componente nuevo hereda el tema sin configuración extra.
 
 ---
 
-## Estado del proyecto
+## Primeros pasos
 
-| Módulo | Estado |
-|---|---|
-| Landing page | Completo |
-| Autenticación local (login / registro) | Completo |
-| Google OAuth | Pendiente de backend |
-| Selector de perfiles | Pendiente de backend |
-| Dashboard | Pendiente de backend |
-| Línea de vida | Pendiente de backend |
-| Medicamentos | Pendiente de backend |
-| Biometría | Pendiente de backend |
+**Requisitos:**
+- Node.js 18+
+- El backend corriendo en local
+
+**Instalación:**
+
+```bash
+git clone https://github.com/Dany1912-dev/SaludConecta-Frontend.git
+cd SaludConecta-Frontend
+npm install
+```
+
+Crea un archivo `.env` en la raíz:
+
+```env
+VITE_API_URL=http://localhost:5247/api
+```
+
+**Desarrollo:**
+
+```bash
+npm run dev
+```
+
+La app queda disponible en `http://localhost:5173`.
 
 ---
 
-## Relacionado
+## Tech stack
 
-- [SaludConecta-Backend](https://github.com/Dany1912-dev/SaludConecta-Backend) — API REST construida con .NET y MySQL
+| | Tecnología |
+|--|--|
+| Framework | React 19 + TypeScript |
+| Build | Vite 8 |
+| Routing | React Router v7 |
+| Estado global | Zustand 5 |
+| Data fetching | TanStack Query v5 |
+| HTTP | Axios |
+| Estilos | CSS Modules + variables CSS |
+| Iconos | Lucide React |
+| Gráficas | Recharts |
