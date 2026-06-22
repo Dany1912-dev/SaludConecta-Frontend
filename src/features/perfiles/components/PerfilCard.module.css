@@ -1,0 +1,60 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--espacio-3);
+  padding: var(--espacio-6) var(--espacio-5);
+  background: var(--color-tarjeta);
+  border: 2px solid var(--color-borde);
+  border-radius: var(--radio-xl);
+  cursor: pointer;
+  transition: all var(--transicion-normal);
+  min-width: 130px;
+  font-family: var(--fuente-base);
+}
+
+.card:hover {
+  border-color: var(--color-primario);
+  background: var(--color-tarjeta-hover);
+  transform: translateY(-6px);
+  box-shadow: var(--sombra-lg);
+}
+
+.avatar {
+  width: 76px;
+  height: 76px;
+  border-radius: var(--radio-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.avatarLetra {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #fff;
+  font-family: var(--fuente-titulo);
+  line-height: 1;
+}
+
+.nombre {
+  font-size: var(--texto-sm);
+  font-weight: 600;
+  color: var(--color-texto-principal);
+  text-align: center;
+  margin: 0;
+  max-width: 130px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.parentesco {
+  font-size: var(--texto-xs);
+  font-weight: 500;
+  color: var(--color-primario);
+  background: var(--color-fondo-secundario);
+  padding: 3px 12px;
+  border-radius: var(--radio-full);
+}

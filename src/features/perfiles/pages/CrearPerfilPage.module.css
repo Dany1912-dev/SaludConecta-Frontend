@@ -1,0 +1,379 @@
+.pagina {
+  min-height: 100vh;
+  background: var(--color-fondo);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--espacio-8) var(--espacio-4);
+}
+
+/* ══════════════════════════════════════
+   PANTALLA DE INTRO
+══════════════════════════════════════ */
+
+.intro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--espacio-5);
+  max-width: 480px;
+  width: 100%;
+}
+
+.botonVolver {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--espacio-1);
+  align-self: flex-start;
+  font-size: var(--texto-sm);
+  font-weight: 500;
+  color: var(--color-texto-secundario);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font-family: var(--fuente-base);
+  transition: color var(--transicion-rapida);
+}
+
+.botonVolver:hover {
+  color: var(--color-primario);
+}
+
+.introIcono {
+  width: 80px;
+  height: 80px;
+  border-radius: var(--radio-full);
+  background: var(--color-fondo-secundario);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: var(--espacio-2);
+}
+
+.introTitulo {
+  font-size: var(--texto-3xl);
+  font-weight: 700;
+  color: var(--color-texto-principal);
+  margin: 0;
+}
+
+.introSubtitulo {
+  font-size: var(--texto-md);
+  color: var(--color-texto-secundario);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.introLista {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-3);
+  width: 100%;
+  background: var(--color-tarjeta);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-xl);
+  padding: var(--espacio-5) var(--espacio-6);
+}
+
+.introItem {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-3);
+  font-size: var(--texto-md);
+  color: var(--color-texto-principal);
+  text-align: left;
+}
+
+.introItemIcono {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radio-md);
+  background: var(--color-fondo-secundario);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.introNota {
+  font-size: var(--texto-sm);
+  color: var(--color-texto-suave);
+  margin: 0;
+}
+
+/* ══════════════════════════════════════
+   WIZARD
+══════════════════════════════════════ */
+
+.wizardContenedor {
+  width: 100%;
+  max-width: 560px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-6);
+}
+
+/* ── Indicador de pasos ── */
+
+.indicador {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.indicadorItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--espacio-2);
+  position: relative;
+  flex: 1;
+}
+
+.lineaConector {
+  position: absolute;
+  top: 15px;
+  width: 50%;
+  height: 2px;
+  background: var(--color-borde);
+  transition: background var(--transicion-normal);
+  z-index: 0;
+}
+
+/* línea de la derecha del ítem */
+.indicadorItem:nth-child(odd) .lineaConector:last-of-type {
+  left: 50%;
+}
+/* línea de la izquierda del ítem */
+.indicadorItem:nth-child(odd) .lineaConector:first-of-type {
+  right: 50%;
+}
+
+.lineaActiva {
+  background: var(--color-primario);
+}
+
+.indicadorCirculo {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radio-full);
+  background: var(--color-borde);
+  color: var(--color-texto-suave);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--texto-sm);
+  font-weight: 700;
+  position: relative;
+  z-index: 1;
+  transition: all var(--transicion-normal);
+}
+
+.circuloActivo {
+  background: var(--color-primario);
+  color: #fff;
+  box-shadow: 0 0 0 4px var(--color-primario-claro);
+}
+
+.circuloCompletado {
+  background: var(--color-exito);
+  color: #fff;
+}
+
+.indicadorEtiqueta {
+  font-size: var(--texto-xs);
+  color: var(--color-texto-suave);
+  font-weight: 500;
+}
+
+.etiquetaActiva {
+  color: var(--color-primario);
+  font-weight: 600;
+}
+
+/* ── Tarjeta del wizard ── */
+
+.wizardTarjeta {
+  background: var(--color-tarjeta);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-xl);
+  padding: var(--espacio-8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-6);
+}
+
+/* ── Paso ── */
+
+.paso {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-5);
+}
+
+.pasoEncabezado {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-1);
+}
+
+.pasoTitulo {
+  font-size: var(--texto-xl);
+  font-weight: 700;
+  color: var(--color-texto-principal);
+  margin: 0;
+}
+
+.pasoDescripcion {
+  font-size: var(--texto-sm);
+  color: var(--color-texto-secundario);
+  margin: 0;
+}
+
+/* ── Avatar ── */
+
+.avatarSeccion {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--espacio-4);
+  padding: var(--espacio-4) 0;
+}
+
+.avatarCirculo {
+  width: 80px;
+  height: 80px;
+  border-radius: var(--radio-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--sombra-md);
+  transition: background-color var(--transicion-normal);
+}
+
+.avatarLetra {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #fff;
+  font-family: var(--fuente-titulo);
+  line-height: 1;
+}
+
+.colores {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--espacio-2);
+  justify-content: center;
+}
+
+.colorSwatch {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radio-full);
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all var(--transicion-rapida);
+  outline: none;
+}
+
+.colorSwatch:hover {
+  transform: scale(1.2);
+}
+
+.colorSeleccionado {
+  box-shadow: 0 0 0 2px var(--color-tarjeta), 0 0 0 4px var(--color-texto-principal);
+  transform: scale(1.1);
+}
+
+/* ── Campos ── */
+
+.campos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-4);
+}
+
+.fila {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--espacio-4);
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-2);
+}
+
+.label {
+  font-size: var(--texto-sm);
+  font-weight: 500;
+  color: var(--color-texto-principal);
+}
+
+.select {
+  width: 100%;
+  padding: 10px 14px;
+  font-size: var(--texto-md);
+  font-family: var(--fuente-base);
+  color: var(--color-texto-principal);
+  background: var(--color-fondo);
+  border: 1.5px solid var(--color-borde);
+  border-radius: var(--radio-md);
+  outline: none;
+  cursor: pointer;
+  transition: border-color var(--transicion-rapida);
+}
+
+.select:focus {
+  border-color: var(--color-primario);
+}
+
+/* ── Nota final (paso 3) ── */
+
+.notaFinal {
+  display: flex;
+  gap: var(--espacio-3);
+  align-items: flex-start;
+  padding: var(--espacio-4);
+  background: var(--color-fondo-secundario);
+  border-radius: var(--radio-lg);
+  border: 1px solid var(--color-borde);
+  margin-top: var(--espacio-2);
+}
+
+.notaFinal p {
+  font-size: var(--texto-sm);
+  color: var(--color-texto-secundario);
+  margin: 0;
+  line-height: 1.6;
+}
+
+.notaFinal strong {
+  color: var(--color-texto-principal);
+}
+
+/* ── Error ── */
+
+.error {
+  font-size: var(--texto-sm);
+  color: var(--color-error);
+  background: var(--color-error-fondo);
+  padding: var(--espacio-3) var(--espacio-4);
+  border-radius: var(--radio-md);
+  border: 1px solid var(--color-error);
+}
+
+/* ── Navegación ── */
+
+.navegacion {
+  display: flex;
+  justify-content: space-between;
+  padding-top: var(--espacio-2);
+  border-top: 1px solid var(--color-borde);
+}
