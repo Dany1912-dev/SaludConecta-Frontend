@@ -76,7 +76,7 @@ export const useRegistro = () => {
       }
       const { data } = await registro(payload)
       setUsuario(data)
-      navigate('/dashboard', { replace: true })
+      navigate('/perfiles', { replace: true })
     } catch (err: any) {
       const mensaje =
         err.response?.data?.error ??

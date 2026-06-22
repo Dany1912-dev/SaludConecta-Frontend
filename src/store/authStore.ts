@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { verificarSesion, logout as logoutApi } from '../api/authApi'
 import type { AuthRespuesta } from '../api/authApi'
+import { usePerfilStore } from './perfilStore'
 
 interface AuthStore {
   usuario: AuthRespuesta | null
@@ -36,6 +37,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
     } finally {
       // Limpiamos el estado aunque el backend falle
       set({ usuario: null })
+      usePerfilStore.getState().limpiarPerfil()
     }
   },
 }))

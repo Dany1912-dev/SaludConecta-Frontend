@@ -29,7 +29,7 @@ export const useLogin = () => {
     try {
       const { data } = await login(form)
       setUsuario(data)
-      navigate('/dashboard', { replace: true })
+      navigate('/perfiles', { replace: true })
     } catch (err: any) {
       const mensaje =
         err.response?.data?.error ??

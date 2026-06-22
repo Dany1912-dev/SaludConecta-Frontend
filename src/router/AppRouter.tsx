@@ -1,8 +1,11 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { useAuthStore } from '../store/authStore'
+import { usePerfilStore } from '../store/perfilStore'
 import LandingPage from '../features/landing/LandingPage'
 import LoginPage from '../features/auth/pages/LoginPage'
 import RegistroPage from '../features/auth/pages/RegistroPage'
+import PerfilesPage from '../features/perfiles/pages/PerfilesPage'
+import CrearPerfilPage from '../features/perfiles/pages/CrearPerfilPage'
 
 const PlaceholderPage = ({ nombre }: { nombre: string }) => {
   const { usuario, logout } = useAuthStore()
@@ -41,6 +44,14 @@ const RutaProtegida = ({ children }: { children: React.ReactNode }) => {
   return usuario ? <>{children}</> : <Navigate to="/login" replace />
 }
 
+const RutaConPerfil = ({ children }: { children: React.ReactNode }) => {
+  const usuario = useAuthStore((s) => s.usuario)
+  const perfilActivo = usePerfilStore((s) => s.perfilActivo)
+  if (!usuario) return <Navigate to="/login" replace />
+  if (!perfilActivo) return <Navigate to="/perfiles" replace />
+  return <>{children}</>
+}
+
 const RutaPublica = ({ children }: { children: React.ReactNode }) => {
   const usuario = useAuthStore((s) => s.usuario)
   return usuario ? <Navigate to="/dashboard" replace /> : <>{children}</>
@@ -57,12 +68,15 @@ const AppRouter = () => (
       <Route path="/login"    element={<RutaPublica><LoginPage /></RutaPublica>} />
       <Route path="/registro" element={<RutaPublica><RegistroPage /></RutaPublica>} />
 
-      {/* Rutas protegidas */}
-      <Route path="/perfiles"      element={<RutaProtegida><PlaceholderPage nombre="Selector de Perfiles" /></RutaProtegida>} />
-      <Route path="/dashboard"     element={<RutaProtegida><PlaceholderPage nombre="Dashboard" /></RutaProtegida>} />
-      <Route path="/linea-de-vida" element={<RutaProtegida><PlaceholderPage nombre="Línea de Vida" /></RutaProtegida>} />
-      <Route path="/medicamentos"  element={<RutaProtegida><PlaceholderPage nombre="Medicamentos" /></RutaProtegida>} />
-      <Route path="/biometria"     element={<RutaProtegida><PlaceholderPage nombre="Biometría" /></RutaProtegida>} />
+      {/* Selector y creación de perfiles */}
+      <Route path="/perfiles"       element={<RutaProtegida><PerfilesPage /></RutaProtegida>} />
+      <Route path="/perfiles/crear" element={<RutaProtegida><CrearPerfilPage /></RutaProtegida>} />
+
+      {/* Rutas protegidas con perfil activo */}
+      <Route path="/dashboard"     element={<RutaConPerfil><PlaceholderPage nombre="Dashboard" /></RutaConPerfil>} />
+      <Route path="/linea-de-vida" element={<RutaConPerfil><PlaceholderPage nombre="Línea de Vida" /></RutaConPerfil>} />
+      <Route path="/medicamentos"  element={<RutaConPerfil><PlaceholderPage nombre="Medicamentos" /></RutaConPerfil>} />
+      <Route path="/biometria"     element={<RutaConPerfil><PlaceholderPage nombre="Biometría" /></RutaConPerfil>} />
 
       {/* 404 */}
       <Route path="*" element={<Navigate to="/" replace />} />
