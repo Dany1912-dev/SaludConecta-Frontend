@@ -1,0 +1,239 @@
+.pagina {
+  min-height: 100vh;
+  background: var(--color-fondo);
+  padding: var(--espacio-8) var(--espacio-4);
+}
+
+.contenedor {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-6);
+}
+
+/* ── Barra superior ── */
+
+.barraSuperior {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--espacio-4);
+}
+
+.bienvenida {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-1);
+}
+
+.saludo {
+  font-size: var(--texto-sm);
+  color: var(--color-texto-secundario);
+  margin: 0;
+}
+
+.tituloPrincipal {
+  font-size: var(--texto-3xl);
+  font-weight: 700;
+  color: var(--color-texto-principal);
+  margin: 0;
+}
+
+.accionesSuperior {
+  display: flex;
+  gap: var(--espacio-3);
+  align-items: center;
+}
+
+/* ── Card del perfil activo ── */
+
+.perfilActivoCard {
+  background: var(--color-tarjeta);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-xl);
+  padding: var(--espacio-5) var(--espacio-6);
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-4);
+  cursor: pointer;
+  transition: border-color var(--transicion-rapida), box-shadow var(--transicion-rapida);
+}
+
+.perfilActivoCard:hover {
+  border-color: var(--color-primario);
+  box-shadow: var(--sombra-md);
+}
+
+.avatarMediano {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radio-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.avatarLetra {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff;
+  font-family: var(--fuente-titulo);
+  line-height: 1;
+}
+
+.perfilActivoInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.perfilActivoNombre {
+  font-size: var(--texto-lg);
+  font-weight: 700;
+  color: var(--color-texto-principal);
+  margin: 0 0 var(--espacio-1);
+}
+
+.perfilActivoMeta {
+  font-size: var(--texto-sm);
+  color: var(--color-texto-secundario);
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--espacio-3);
+}
+
+.metaItem {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--espacio-1);
+}
+
+.perfilActivoFlecha {
+  color: var(--color-texto-suave);
+}
+
+/* ── Grid de tarjetas de resumen ── */
+
+.gridResumen {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--espacio-4);
+}
+
+.tarjetaResumen {
+  background: var(--color-tarjeta);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-xl);
+  padding: var(--espacio-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-3);
+  cursor: pointer;
+  transition: border-color var(--transicion-rapida), transform var(--transicion-rapida);
+}
+
+.tarjetaResumen:hover {
+  border-color: var(--color-primario);
+  transform: translateY(-2px);
+}
+
+.tarjetaIcono {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radio-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tarjetaEtiqueta {
+  font-size: var(--texto-xs);
+  font-weight: 600;
+  color: var(--color-texto-secundario);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0;
+}
+
+.tarjetaValor {
+  font-size: var(--texto-2xl);
+  font-weight: 700;
+  color: var(--color-texto-principal);
+  margin: 0;
+  line-height: 1;
+}
+
+.tarjetaDescripcion {
+  font-size: var(--texto-sm);
+  color: var(--color-texto-secundario);
+  margin: 0;
+}
+
+/* ── Sección de acciones rápidas ── */
+
+.seccionAcciones {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-4);
+}
+
+.seccionTitulo {
+  font-size: var(--texto-lg);
+  font-weight: 700;
+  color: var(--color-texto-principal);
+  margin: 0;
+}
+
+.gridAcciones {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: var(--espacio-3);
+}
+
+.accionCard {
+  background: var(--color-tarjeta);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-xl);
+  padding: var(--espacio-4) var(--espacio-5);
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-3);
+  cursor: pointer;
+  font-family: var(--fuente-base);
+  font-size: var(--texto-sm);
+  font-weight: 600;
+  color: var(--color-texto-principal);
+  background: none;
+  text-align: left;
+  transition: all var(--transicion-rapida);
+}
+
+.accionCard:hover {
+  background: var(--color-fondo-secundario);
+  border-color: var(--color-primario);
+  color: var(--color-primario);
+}
+
+.accionIcono {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radio-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* ── Sin perfil activo ── */
+
+.sinPerfil {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: var(--espacio-4);
+  text-align: center;
+}
