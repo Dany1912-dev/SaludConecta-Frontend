@@ -19,6 +19,10 @@ const PerfilesPage = () => {
     navigate('/dashboard', { replace: true })
   }
 
+  const verDetalle = (perfil: PerfilPaciente) => {
+    navigate(`/perfiles/${perfil.id}`)
+  }
+
   return (
     <div className={styles.pagina}>
 
@@ -83,6 +87,7 @@ const PerfilesPage = () => {
                   key={perfil.id}
                   perfil={perfil}
                   onClick={seleccionarPerfil}
+                  onDetalle={verDetalle}
                 />
               ))}
 
