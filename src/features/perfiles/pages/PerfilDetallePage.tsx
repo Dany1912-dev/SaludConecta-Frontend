@@ -207,7 +207,7 @@ const TabAntecedentes = ({ perfilId }: { perfilId: number }) => {
 
   useEffect(() => { cargar() }, [cargar])
 
-  const guardarPersonal = async () => {
+  const handleGuardarPersonal = async () => {
     if (!formP.condicionMedicaId) { setError('Selecciona una condición'); return }
     setGuardando(true); setError(null)
     try {
@@ -255,7 +255,7 @@ const TabAntecedentes = ({ perfilId }: { perfilId: number }) => {
       <div className={styles.subTabs}>
         {([
           ['personal', 'Personal', personales.length],
-          ['heredofamiliar', 'Heredo-familiar', herodo.length],
+          ['heredofamiliar', 'Heredo-familiar', heredo.length],
           ['psicologico', 'Psicológico', psic.length],
         ] as const).map(([id, label, count]) => (
           <button key={id} className={`${styles.subTab} ${subTab === id ? styles.subTabActivo : ''}`}
@@ -298,7 +298,7 @@ const TabAntecedentes = ({ perfilId }: { perfilId: number }) => {
               {error && <p className={styles.error}>{error}</p>}
               <div className={styles.formularioAcciones}>
                 <Boton variante="secundario" onClick={() => setMostrarForm(false)}>Cancelar</Boton>
-                <Boton cargando={guardando} onClick={guardarPersonal}>Guardar</Boton>
+                <Boton cargando={guardando} onClick={handleGuardarPersonal}>Guardar</Boton>
               </div>
             </div>
           )}
